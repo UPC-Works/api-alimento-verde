@@ -63,7 +63,7 @@ async def upload_image(image: UploadFile = File(...)):
     saved_image_path = f'images/{image_id}'
     with open(saved_image_path, "wb") as buffer:
         shutil.copyfileobj(image.file, buffer)
-    return {"error":"","message": f'D:/Github/python/github.com/Aphofisis/AlimentoVerde/api-alimento-verde/{saved_image_path}'}  
+    return {"error":"","message": f'D:/Github/python/github.com/e-lua/AlimentoVerde/api-alimento-verde/{saved_image_path}'}  
 
 @app.delete("/product/{id_product}")
 async def list_all(id_product: str):
