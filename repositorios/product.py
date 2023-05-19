@@ -33,7 +33,7 @@ class ProductRepository:
             cursor.close()
             conn.close()
             
-    def get_product(input_id_owner: str,input_name: str):
+    def get_product(input_id_owner: str,input_name: str,input_type_user: int):
         
         conn = get_db_connection()
 
@@ -45,10 +45,16 @@ class ProductRepository:
             cursor = conn.cursor()
             
             if (len(input_name)>0):
-                cursor.execute(("SELECT id,id_owner,name,description,image,label,created_at,updated_at,stock,price,discount_price FROM PRODUCT WHERE id_owner=%s AND name~%s ORDER BY name ASC"), (input_id_owner,input_name,))    
+                if input_type_user==1:
+                    cursor.execute(("SELECT id,id_owner,name,description,image,label,created_at,updated_at,stock,price,discount_price FROM PRODUCT WHERE id_owner=%s AND name~%s ORDER BY name ASC"), (input_id_owner,input_name,))    
+                else:
+                    cursor.execute(("SELECT id,id_owner,name,description,image,label,created_at,updated_at,stock,price,discount_price FROM PRODUCT WHERE id_owner=%s AND name~%s AND stock>0 ORDER BY name ASC"), (input_id_owner,input_name,))
             else:
-                cursor.execute(("SELECT id,id_owner,name,description,image,label,created_at,updated_at,stock,price,discount_price FROM PRODUCT WHERE id_owner=%s ORDER BY name ASC"), (input_id_owner,))
-            
+                if input_type_user==1:
+                    cursor.execute(("SELECT id,id_owner,name,description,image,label,created_at,updated_at,stock,price,discount_price FROM PRODUCT WHERE id_owner=%s ORDER BY name ASC"), (input_id_owner,))
+                else:
+                    cursor.execute(("SELECT id,id_owner,name,description,image,label,created_at,updated_at,stock,price,discount_price FROM PRODUCT WHERE id_owner=%s AND stock>0 ORDER BY name ASC"), (input_id_owner,))
+                
             # Obtiene todos los registros de la consulta
             records = cursor.fetchall()
                         

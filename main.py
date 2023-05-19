@@ -53,8 +53,8 @@ async def add(product: Product):
     return ProductService.Add(product)
 
 @app.get("/product/{id_owner}")
-async def list_all(id_owner: str, name: str = Query(None)):
-    return ProductService.ListAll(id_owner,name)
+async def list_all(id_owner: str, name: str = Query(None), type_user: int = Query(None)):
+    return ProductService.ListAll(id_owner,name,type_user)
 
 @app.post("/product/upload")
 async def upload_image(image: UploadFile = File(...)):

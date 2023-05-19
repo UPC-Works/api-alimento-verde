@@ -11,13 +11,19 @@ class ProductService:
         finally:
             return {"error":"","message": "OK"}
 
-    def ListAll(input_id_owner: str,input_name: str):
-        try:
-            list_product = ProductRepository.get_product(input_id_owner,input_name)
-            return {"error":"","message":list_product}
-        except Exception as e:
-            return {"error":"Error al intentar crear producto","message": []}
-    
+    def ListAll(input_id_owner: str,input_name: str,input_type_user: int):
+        if input_type_user==1:
+            try:
+                list_product = ProductRepository.get_product(input_id_owner,input_name,input_type_user)
+                return {"error":"","message":list_product}
+            except Exception as e:
+                return {"error":"Error al intentar crear producto","message": []}
+        else:
+            try:
+                list_product = ProductRepository.get_product(input_id_owner,input_name,input_type_user)
+                return {"error":"","message":list_product}
+            except Exception as e:
+                return {"error":"Error al intentar crear producto","message": []}    
     def Delete(input_id_product: str):
         try:
             list_product = ProductRepository.delete_product(input_id_product)
