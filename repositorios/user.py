@@ -14,10 +14,10 @@ class UserRepository:
         
         cursor = conn.cursor()
                     
-        insert_query = 'INSERT INTO users (id,full_name,password,email,created_at,updated_at,id_type,latitude,longitude) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s);'
+        insert_query = 'INSERT INTO users (id,full_name,password,email,created_at,updated_at,id_type,latitude,longitude,phone) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);'
 
         try:
-            cursor.execute(insert_query,(str(uuid.uuid4()), user.full_name, user.password, user.email,datetime.now(),datetime.now(), user.id_type,user.latitude,user.longitude))
+            cursor.execute(insert_query,(str(uuid.uuid4()), user.full_name, user.password, user.email,datetime.now(),datetime.now(), user.id_type,user.latitude,user.longitude,user.phone))
             conn.commit()
         except Exception as e:
             print(f"Error al insertar el valor: {e}")
@@ -38,7 +38,7 @@ class UserRepository:
         try:
             cursor = conn.cursor()
             
-            cursor.execute(("SELECT id,full_name,password,email,created_at,updated_at,id_type,latitude,longitude FROM users WHERE email=%s AND password=%s"), (input_email,input_password))
+            cursor.execute(("SELECT id,full_name,password,email,created_at,updated_at,id_type,latitude,longitude,phone FROM users WHERE email=%s AND password=%s"), (input_email,input_password))
 
             # Obtiene todos los registros de la consulta
             record = cursor.fetchone()
@@ -48,7 +48,7 @@ class UserRepository:
             conn.close()
 
             # Convierte los registros a una lista de diccionarios y retorna la lista
-            user ={"id": record[0], "full_name": record[1], "password": record[2], "email": record[3], "created_at": record[4], "updated_at": record[5], "id_type": record[6], "latitude": record[7], "longitude": record[8]}
+            user ={"id": record[0], "full_name": record[1], "password": record[2], "email": record[3], "created_at": record[4], "updated_at": record[5], "id_type": record[6], "latitude": record[7], "longitude": record[8], "phone": record[9]}
             
             return user
         
@@ -67,10 +67,10 @@ class UserRepository:
             
             # Actualización de los datos del objeto User en la tabla
             update_query = """
-                UPDATE users SET updated_at=%s,latitude=%s,longitude=%s WHERE id=%s;
+                UPDATE users SET updated_at=%s,latitude=%s,longitude=%s,phone=%s WHERE id=%s;
             """
 
-            cursor.execute(update_query, (datetime.now(),user.latitude,user.longitude, user.id))
+            cursor.execute(update_query, (datetime.now(),user.latitude,user.longitude,user.phone, user.id))
             conn.commit()
             
             user ={"latitude":user.latitude,"longitude":user.longitude}
@@ -94,7 +94,7 @@ class UserRepository:
         try:
             cursor = conn.cursor()
             
-            cursor.execute(("SELECT us.id,us.full_name,us.password,us.email,us.created_at,us.updated_at,us.id_type,us.latitude,us.longitude,CASE WHEN now()::time>=sch.start_hour AND now()::time<=sch.end_hour THEN true ELSE false END FROM users AS us JOIN schedule as sch ON us.id=sch.id_owner  WHERE sch.id_day=extract(ISODOW from now())"))
+            cursor.execute(("SELECT us.id,us.full_name,us.password,us.email,us.created_at,us.updated_at,us.id_type,us.latitude,us.longitude,us.phone,CASE WHEN now()::time>=sch.start_hour AND now()::time<=sch.end_hour THEN true ELSE false END FROM users AS us JOIN schedule as sch ON us.id=sch.id_owner  WHERE sch.id_day=extract(ISODOW from now())"))
 
             # Obtiene todos los registros de la consulta
             records = cursor.fetchall()
@@ -108,7 +108,7 @@ class UserRepository:
             
             # Convierte los registros a una lista de diccionarios y retorna la lista
             for record in records:
-                user ={"id": record[0], "full_name": record[1], "password": record[2], "email": record[3], "created_at": record[4], "updated_at": record[5], "id_type": record[6], "latitude": record[7], "longitude": record[8]}
+                user ={"id": record[0], "full_name": record[1], "password": record[2], "email": record[3], "created_at": record[4], "updated_at": record[5], "id_type": record[6], "latitude": record[7], "longitude": record[8], "phone": record[9], "status": record[10]}
                 users.append(user)
                                    
             return users

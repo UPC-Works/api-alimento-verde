@@ -14,6 +14,7 @@ class User(BaseModel):
     updated_at: Optional[datetime]
     id_type: Optional[int]
     status: Optional[bool]
+    phone: Optional[str]
 
 class Product(BaseModel):
     id: Optional[str]  
